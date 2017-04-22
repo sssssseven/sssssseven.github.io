@@ -553,6 +553,7 @@ margin on the iframe, cause it breaks stuff. */
 .blog-logo {
     display: block;
     float: left;
+    left: 10%;
     background: none !important;
     border: none !important;
 }
