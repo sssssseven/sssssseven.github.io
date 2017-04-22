@@ -3,7 +3,7 @@ layout: default
 title: Home
 cover: false
 about: 'about.html'
-logo: /assets/images/headimg.jpg
+logo: /assets/images/seven.jpg
 ---
 
 <header class="main-header {% if page.cover %}" style="background-image: url({{ page.cover }}) {%else%}no-cover{% endif %}">
@@ -18,11 +18,6 @@ logo: /assets/images/headimg.jpg
     <div class="vertical">
         <div class="main-header-content inner">
             <h1 class="page-title">
-	            {% if page.logo %}
-	                <a class="blog-logo" href="{{ site.baseurl }}">
-	                    <img src="{{ page.logo }}" alt="Blog Logo" />
-	                </a>
-	            {% endif %}
 	            {{ site.name }}
             </h1>
             <h2 class="page-description">
