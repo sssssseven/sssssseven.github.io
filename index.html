@@ -17,7 +17,14 @@ logo: /assets/images/headimg.jpg
     </nav>
     <div class="vertical">
         <div class="main-header-content inner">
-            <h1 class="page-title">{{ site.name }}</h1>
+            <h1 class="page-title">
+	            {% if page.logo %}
+	                <a class="blog-logo" href="{{ site.baseurl }}">
+	                    <img src="{{ page.logo }}" alt="Blog Logo" />
+	                </a>
+	            {% endif %}
+	            {{ site.name }}
+            </h1>
             <h2 class="page-description">
                 {% if site.description %} {{ site.description }}. {% endif %}
                 {% if page.about %} <a href='{{ site.baseurl }}{{ page.about }}'> About me </a> {% endif %}
