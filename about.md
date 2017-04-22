@@ -1,6 +1,6 @@
 ---
 layout: page
-title: About
+title: About me 
 ---
-{{ site.description }}
-![Songroger]({{ site.about }})
+
+This is a static page. It could be an 'about page' if you'd like.
