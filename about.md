@@ -3,4 +3,4 @@ layout: page
 title: About me 
 ---
 
-This is a static page. It could be an 'about page' if you'd like.
+There is nothing about me now, maybe you can push something [here](https://github.com/sssssseven/sssssseven.github.io).
