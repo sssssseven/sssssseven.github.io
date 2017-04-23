@@ -7,7 +7,7 @@ imgpath: /assets/images/mybatis/learn-day1/
 ---
 
 
-#环境配置
+# 环境配置
 1. 下载[MyBatis-x.x.x.jar](https://github.com/mybatis/mybatis-3/releases).  
 	Maven需要在pom.xml中添加如下依赖:  
 
@@ -18,10 +18,10 @@ imgpath: /assets/images/mybatis/learn-day1/
 		</dependency>
 2. 将MyBatis的jar包添加到项目的classpath中。(Maven则无须再配置)
 
-#一个基本的MyBatis项目
-####1.  文件目录  
+# 一个基本的MyBatis项目
+#### 1.  文件目录  
    ![文件目录](http://sssssseven.github.io/assets/images/mybatis/learn-day1/files.png)  
-####2.  文件分析 
+#### 2.  文件分析 
 - Main.java  
 
 	```java  
@@ -124,7 +124,7 @@ imgpath: /assets/images/mybatis/learn-day1/
 
 	>&emsp;&emsp;然后就可以通过&ensp;```Pojo pojo = mapper.selectPojo(1L);```&ensp;获取数据库中id为1的对象，查询语句由```<select>```中的语句实现。
 
-####3. 流程分析
+#### 3. 流程分析
 
 - &emsp;&emsp;可以看到，一个最简单的查询流程包括了一下步骤：<br>
 >1. 通过mybatis的配置文件获取SqlSessionFactory。
