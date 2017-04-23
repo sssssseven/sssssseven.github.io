@@ -1,0 +1,138 @@
+---
+layout: post
+title: MyBatis学习 (1)
+data: 2017/4/23 
+categories: MyBatis
+imgpath: /assets/images/mybatis/learn-day1/
+---
+
+
+#环境配置
+1. 下载[MyBatis-x.x.x.jar](https://github.com/mybatis/mybatis-3/releases).  
+	Maven需要在pom.xml中添加如下依赖:  
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>x.x.x</version>
+		</dependency>
+2. 将MyBatis的jar包添加到项目的classpath中。(Maven则无须再配置)
+
+#一个基本的MyBatis项目
+####1.  文件目录  
+   ![文件目录](http://sssssseven.github.io/assets/images/mybatis/learn-day1/files.png)  
+####2.  文件分析 
+- Main.java  
+
+	```java  
+	package com.learn.day1.main;
+	import java.io.IOException;
+	import org.apache.ibatis.io.Resources;
+	import org.apache.ibatis.session.SqlSession;
+	import org.apache.ibatis.session.SqlSessionFactory;
+	import org.apache.ibatis.session.SqlSessionFactoryBuilder;	
+	import com.learn.day1.mapper.PojoMapper;
+	import com.learn.day1.pojo.Pojo;  
+	public class Main {
+		public static void main(String[] args){
+			SqlSession ss = null;
+			try {
+				SqlSessionFactory ssf = 
+						new SqlSessionFactoryBuilder().build(Resources.
+								getResourceAsStream("mybatis-config.xml"));
+				ss = ssf.openSession();
+				PojoMapper mapper = ss.getMapper(PojoMapper.class);
+				Pojo pojo = mapper.selectPojo(1L);
+				System.out.println(pojo.getName());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}finally{
+				if(ss != null){
+					ss.close();
+				}
+			}
+		}
+	}
+	```
+	>&emsp;&emsp;首先Main方法通过一个匿名的SqlSessionFactoryBuilder的build()方法创建了一个SqlSessionFactory，传入参数为以mybatis-config.xml为输入流的Resource对象。注意，这个SqlSessionFactory在实际的应用中一般是对应于一个数据库的全局对象，最好使用单例模式进行创建。mybatis-config.xml内容如下：
+
+- mybatis-config.xml
+	```xml
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+	<configuration>
+		<properties>
+			<property name="driver" value="com.mysql.jdbc.Driver"/>
+			<property name="url" value="jdbc:mysql://localhost:3306/mybatis"/>
+			<property name="username" value="root"/>
+			<property name="password" value="imseven"/>
+		</properties>
+		<environments default="development">
+			<environment id="development">
+				<transactionManager type="JDBC"/>
+				<dataSource type="POOLED">
+					<property name="driver" value="${driver}"/>
+					<property name="url" value="${url}"/>
+					<property name="username" value="${username}"/>
+					<property name="password" value="${password}"/>
+				</dataSource>
+			</environment>
+		</environments>
+		<mappers>
+			<mapper resource="com/learn/day1/mapper/pojoMapper.xml"/>
+		</mappers>
+	</configuration>
+	```
+
+	>其中properties中的各个属性定义了数据库连接的各个参数，然后environment中定义了数据库的连接类型和数据源。
+
+	>&emsp;&emsp;然后通过这个SqlSessionFactory创建了一个SqlSession对象，注意，这个SqlSession对象在一次数据库事务操作结束之后需要进行关闭。
+
+	>&emsp;&emsp;接着使用得到的session连接通过调用getMapper方法，传入xxxMapper.class参数，得到了一个xxxMapper对象，该mapper的内容如下：
+
+- PojoMapper.java
+	```java
+	package com.learn.day1.mapper;
+	
+	import com.learn.day1.pojo.Pojo;
+	
+	public interface PojoMapper {
+		Pojo selectPojo(Long id);
+	}
+	```
+
+	>发现这个类中只有一个简单的selectPojo方法，没有实现，其实SqlSession是通过mybatis-config.xml配置文件中的```<mapper>```来获取这个映射器的，通过PojoMapper.class这个类信息定位到了```<mapper resource="com/learn/day1/mapper/pojoMapper.xml"/>```这个映射器，文件内容如下：
+
+- pojoMapper.xml
+	```xml
+	<?xml version="1.0" encoding="UTF-8" ?>
+	<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.learn.day1.mapper.PojoMapper">
+		<select id="selectPojo" parameterType="long" resultType="com.learn.day1.pojo.Pojo">
+			select id, role_name as name,note from t_role where id = #{id}
+		</select>
+	</mapper>
+	```
+
+	>可以看到，这个映射器配置文件通过namespace属性将此映射器和PoJoMapper这个类联系起来，根据：
+	>```<select id="selectPojo" parameterType="long" resultType="com.learn.day1.pojo.Pojo">```
+	>给出了PojoMapper类中的selectPojo(Long)的实现，明确了参数和返回类型。
+
+	>&emsp;&emsp;然后就可以通过&ensp;```Pojo pojo = mapper.selectPojo(1L);```&ensp;获取数据库中id为1的对象，查询语句由```<select>```中的语句实现。
+
+####3. 流程分析
+
+- &emsp;&emsp;可以看到，一个最简单的查询流程包括了一下步骤：<br>
+>1. 通过mybatis的配置文件获取SqlSessionFactory。
+>
+>2. 通过SqlSessionFactory的openSession()方法打开一个SqlSession连接。
+>3. 通过mybatis配置文件中的```<mapper>```，调用连接的getMapper(xxxMapper.class)方法获取到xxx的映射器对象。
+>
+>4. 通过调用映射器中对应的方法进行数据库操作，获取结果。
+
+<br>
+以上完成了MyBatis的最基本的数据库操作流程，其中SqlSessionFactory、PojoMapper的获取都可以通过java代码的方式来实现，具体可参考[MyBatis-x.x.x](https://github.com/mybatis/mybatis-3/releases)中的文档。
