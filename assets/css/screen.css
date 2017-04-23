@@ -341,7 +341,7 @@ pre {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     margin: 0 0 1.75em 0;
-    border: #E3EDF3 1px solid;
+    border: 1px solid #ccc;
     width: 100%;
     padding: 10px;
     font-family: Inconsolata, monospace, sans-serif;
@@ -1777,7 +1777,9 @@ body:not(.post-template) .post-title {
     }
 }
 
-
+.highlight {
+    background: #f8f8f8;
+}
 /* ==========================================================================
    End of file. Animations should be the last thing here. Do not add stuff
    below this point, or it will probably fuck everything up.
