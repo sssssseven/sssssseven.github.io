@@ -6,7 +6,7 @@ categories: MyBatis
 imgpath: /assets/images/mybatis/learn-day1/
 ---
 
-
+<br>
 ### 环境配置
 1. 下载[MyBatis-x.x.x.jar](https://github.com/mybatis/mybatis-3/releases).  
 	Maven需要在pom.xml中添加如下依赖:  
