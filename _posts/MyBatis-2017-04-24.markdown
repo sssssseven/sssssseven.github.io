@@ -1,0 +1,113 @@
+---
+layout: post
+title: MyBatis-TypeHandler
+data: 2017/4/25 
+categories: MyBatis
+
+---
+
+>Whenever MyBatis sets a parameter on a PreparedStatement or retrieves a value from a ResultSet, a TypeHandler is used to retrieve the value in a means appropriate to the Java type.
+
+&emsp;&emsp;官方文档给出的解释，Mybatis设置PS的一个参数时，在明确了得到的jdbc类型和需要获得的java参数类型后，会使用一个对应的TypeHandler对其进行设置，具体方式如下。
+
+
+####[-->TypeHandler练习完整代码](https://github.com/sssssseven/MyBatis-learn)
+
+这次的项目与之前上一篇练习项目的差异有：
+
+- mybatis-config.xml中增加了typehandler元素<br>
+```xml
+	<typeHandlers>
+		<typeHandlerhandler="typehandler.MyStringTypeHandler"/>
+		<typeHandlerhandler="typehandler.MyStringTypeHandler2"/>
+	</typeHandlers>
+```
+
+
+- 增加了两个MyStringHandler类
+
+&emsp;这两个类实现了```TypeHandler<T>```接口或继承了```BaseTypeHandler<String>```这个类型处理器基类，MyBatis接收配置文件中的typeHandlers参数后，会根据两个类中的java注解```@MappedTypes(String.class)```和 ```@MappedJdbcTypes(JdbcType.VARCHAR)```将其注册到&ensp;**VARCHAR->String**&ensp;这组类型映射上（第一个会被第二个覆盖）。
+
+&emsp;Main方法在处理查询请求```PojoDAO pojo = mapper.selectPojo(1L);```时，通过映射器得知了返回类型为PojoDAO，则需要将数据库查询的结果集转换为java类型，其中在处理 **VARCHAR->String** 时（roleName和note两个属性），会根据上面已经注册的typeHandler中的方法进行处理。
+
+**注意**，***实现接口*** 和***继承基类*** 两种方式的不同之处在于：
+```java
+@MappedJdbcTypes(JdbcType.VARCHAR)	// 指定映射的jdbc类型
+public class MyStringTypeHandler extends BaseTypeHandler<String>
+```
+***继承基类*** 的MyStringTypeHandler在其所继承的基类中声明对应的java类型```<String>```之后无需再声明自己对应的**java类型**，因为MyBatis会自动将其替换掉其父类（暂时这么理解），这样它只需要声明对应的**jdbc类型**；
+
+```java
+@MappedTypes(String.class)		// 指定映射的java类型
+@MappedJdbcTypes(JdbcType.VARCHAR)	// 指定映射的jdbc类型
+public class MyStringTypeHandler2 implements TypeHandler<String>
+```
+***实现接口*** 的MyStringTypeHandler2必须同时声明自己对应的**java变量类型**和**jdbc类型**才会被设为该 "处理对" 默认的处理器（如把@javaType的注解去掉，则不会使用它做VARCHAR->String的类型处理），因为MyBatis不知道用它替换掉哪个已经注册的类型处理器（maybe）。
+
+以上是建立在要将定义的类型处理器设为默认处理器的情况下的，如果不需要如此，比如我只想在获取对象的note时输出某个信息，则可以单独将结果集中某个字段的类型处理器设为一个自定义的类型处理器，如[pojoMapper2.xml]()中那样：
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.PojoMapper">
+	<resultMap type="pojo.PojoDAO" id="pojoMap">
+		<id column="id" javaType="long" jdbcType="BIGINT" />
+		<result column="roleName" property="roleName" javaType="string" jdbcType="VARCHAR" />
+		<result column="note" property="note" typeHandler="typehandler.MyStringTypeHandler2" />
+	</resultMap>
+	
+	<select id="selectPojo" parameterType="long" resultMap="pojoMap">
+		select id,role_name as roleName,note from t_role where id=#{id}
+	</select>
+</mapper>
+```
+可以看到，该映射器为note这一字段单独设置了[MyStringTypeHandler2]()这一类型处理器，这样，即使该处理器没有声明自己所对应的 "处理对" ，但只要它处理的结果是正确的，就可以正常运行。
+
+---
+#### 枚举类型处理器
+
+枚举类型在数据库中经常用到，实际上在MySQL对枚举类型的存储中，貌似只是存储了简单CHAR类型（后面说为什么这么认为），在JDBC获取的结果集中，通过ResultSet的getXXX()方法将其转换为int, String等类型，然后根据该值再映射到对应的枚举值。
+MyBatis中自带的两个枚举类型处理器EnumOrdinalTypeHandler和EnumTypeHandler分别使用了int和String两个类型做映射，如下：
+
+```java
+EnumOrdinalTypeHandler:
+ @Override
+  public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
+    ps.setInt(i, parameter.ordinal());
+  }
+ @Override
+  public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
+    int i = rs.getInt(columnName);
+    if (rs.wasNull()) {
+      return null;
+    } else {
+      try {
+        return enums[i];
+      } catch (Exception ex) {
+        throw new IllegalArgumentException("Cannot convert " + i + " to " + type.getSimpleName() + " by ordinal value.", ex);
+      }
+    }
+  }
+```
+
+```java
+EnumTypeHandler:
+ @Override
+  public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
+    if (jdbcType == null) {
+      ps.setString(i, parameter.name());
+    } else {
+      ps.setObject(i, parameter.name(), jdbcType.TYPE_CODE); // see r3589
+    }
+  }
+ @Override
+  public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
+    String s = rs.getString(columnName);
+    return s == null ? null : Enum.valueOf(type, s);
+  }
+```
+
+可以看到，这两个类型处理器分别将从数据库获取到的对应列通过getInt()、getString()的方法得到一个"值"，然后再将这个"值"通过"[]"或valueOf()方法转换为对应的枚举类型。这种做法本质上并不是真正的枚举，事实证明，将数据库中对应的列换成INT或者VARCHAR等类型，只要getXXX()得到的数据通过处理器对应的方法能够映射到某个枚举值，程序可以正常运行，所以从这方面来说，这种枚举可以说本质上就是int型。也正是因为如此，自定义的枚举类型处理器只需要将数据库中获取到的值映射到对应的枚举类型即可，实现非常简单。
+
+[-->枚举类型处理器示例代码](https://github.com/sssssseven/MyBatis-learn)

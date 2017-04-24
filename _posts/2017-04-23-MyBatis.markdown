@@ -1,6 +1,6 @@
 ---
 layout: post
-title: MyBatis学习 (1)
+title: MyBatis-start
 data: 2017/4/23 
 categories: MyBatis
 imgpath: /assets/images/mybatis/learn-day1/
@@ -54,7 +54,7 @@ imgpath: /assets/images/mybatis/learn-day1/
 		}
 	}
 	```
-	>&emsp;&emsp;首先Main方法通过一个匿名的SqlSessionFactoryBuilder的build()方法创建了一个SqlSessionFactory，传入参数为以mybatis-config.xml为输入流的Resource对象。注意，这个SqlSessionFactory在实际的应用中一般是对应于一个数据库的全局对象，最好使用单例模式进行创建。mybatis-config.xml内容如下：
+	>&emsp;&emsp;首先Main方法通过一个匿名的SqlSessionFactoryBuilder的build()方法创建了一个SqlSessionFactory，传入参数为以mybatis-config.xml为输入流的Resource对象。注意，这个SqlSessionFactory在实际的应用中一般是一个全局对象，最好使用单例模式进行创建（由生命周期决定）。mybatis-config.xml内容如下：
 
 - mybatis-config.xml
 	```xml
