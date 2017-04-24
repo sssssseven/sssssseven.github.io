@@ -66,8 +66,8 @@ imgpath: /assets/images/mybatis/learn-day1/
 		<properties>
 			<property name="driver" value="com.mysql.jdbc.Driver"/>
 			<property name="url" value="jdbc:mysql://localhost:3306/mybatis"/>
-			<property name="username" value="root"/>
-			<property name="password" value="imseven"/>
+			<property name="username" value="urusername"/>
+			<property name="password" value="urpswd"/>
 		</properties>
 		<environments default="development">
 			<environment id="development">
