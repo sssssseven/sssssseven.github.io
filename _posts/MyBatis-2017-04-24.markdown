@@ -11,7 +11,7 @@ categories: MyBatis
 &emsp;&emsp;官方文档给出的解释，Mybatis设置PS的一个参数时，在明确了得到的jdbc类型和需要获得的java参数类型后，会使用一个对应的TypeHandler对其进行设置，具体方式如下。
 
 
-####[-->TypeHandler练习完整代码](https://github.com/sssssseven/MyBatis-learn)
+####[-->TypeHandler练习完整代码](https://github.com/sssssseven/MyBatis-learn/tree/master/MyBatis-TypeHandler)
 
 这次的项目与之前上一篇练习项目的差异有：
 
@@ -44,7 +44,7 @@ public class MyStringTypeHandler2 implements TypeHandler<String>
 ```
 ***实现接口*** 的MyStringTypeHandler2必须同时声明自己对应的**java变量类型**和**jdbc类型**才会被设为该 "处理对" 默认的处理器（如把@javaType的注解去掉，则不会使用它做VARCHAR->String的类型处理），因为MyBatis不知道用它替换掉哪个已经注册的类型处理器（maybe）。
 
-以上是建立在要将定义的类型处理器设为默认处理器的情况下的，如果不需要如此，比如我只想在获取对象的note时输出某个信息，则可以单独将结果集中某个字段的类型处理器设为一个自定义的类型处理器，如[pojoMapper2.xml]()中那样：
+以上是建立在要将定义的类型处理器设为默认处理器的情况下的，如果不需要如此，比如我只想在获取对象的note时输出某个信息，则可以单独将结果集中某个字段的类型处理器设为一个自定义的类型处理器，如[pojoMapper2.xml](https://github.com/sssssseven/MyBatis-learn/blob/master/MyBatis-TypeHandler/mapper/pojoMapper2.xml)中那样：
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
@@ -62,7 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 </mapper>
 ```
-可以看到，该映射器为note这一字段单独设置了[MyStringTypeHandler2]()这一类型处理器，这样，即使该处理器没有声明自己所对应的 "处理对" ，但只要它处理的结果是正确的，就可以正常运行。
+可以看到，该映射器为note这一字段单独设置了[MyStringTypeHandler2](https://github.com/sssssseven/MyBatis-learn/blob/master/MyBatis-TypeHandler/typehandler/MyStringTypeHandler2.java)这一类型处理器，这样，即使该处理器没有声明自己所对应的 "处理对" ，但只要它处理的结果是正确的，就可以正常运行。
 
 ---
 #### 枚举类型处理器
@@ -110,4 +110,4 @@ EnumTypeHandler:
 
 可以看到，这两个类型处理器分别将从数据库获取到的对应列通过getInt()、getString()的方法得到一个"值"，然后再将这个"值"通过"[]"或valueOf()方法转换为对应的枚举类型。这种做法本质上并不是真正的枚举，事实证明，将数据库中对应的列换成INT或者VARCHAR等类型，只要getXXX()得到的数据通过处理器对应的方法能够映射到某个枚举值，程序可以正常运行，所以从这方面来说，这种枚举可以说本质上就是int型。也正是因为如此，自定义的枚举类型处理器只需要将数据库中获取到的值映射到对应的枚举类型即可，实现非常简单。
 
-[-->枚举类型处理器示例代码](https://github.com/sssssseven/MyBatis-learn)
+[-->枚举类型处理器示例代码](https://github.com/sssssseven/MyBatis-learn/tree/master/MyBatis-EnumTypeHandler)
