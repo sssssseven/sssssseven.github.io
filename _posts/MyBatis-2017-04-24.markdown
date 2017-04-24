@@ -11,7 +11,7 @@ categories: MyBatis
 &emsp;&emsp;官方文档给出的解释，Mybatis设置PS的一个参数时，在明确了得到的jdbc类型和需要获得的java参数类型后，会使用一个对应的TypeHandler对其进行设置，具体方式如下。
 
 
-####[-->TypeHandler练习完整代码](https://github.com/sssssseven/MyBatis-learn/tree/master/MyBatis-TypeHandler)
+#### [-->TypeHandler练习完整代码](https://github.com/sssssseven/MyBatis-learn/tree/master/MyBatis-TypeHandler)
 
 这次的项目与之前上一篇练习项目的差异有：
 

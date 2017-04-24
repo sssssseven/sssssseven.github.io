@@ -138,4 +138,4 @@ imgpath: /assets/images/mybatis/learn-day1/
 <br>
 以上完成了MyBatis的最基本的数据库操作流程，其中SqlSessionFactory、PojoMapper的获取都可以通过java代码的方式来实现，具体可参考[MyBatis-x.x.x](https://github.com/mybatis/mybatis-3/releases)中的文档。
 
-######[项目源码](https://github.com/sssssseven/MyBatis-learn/tree/master/MyBaits-Start)
+###### [项目源码](https://github.com/sssssseven/MyBatis-learn/tree/master/MyBaits-Start)
