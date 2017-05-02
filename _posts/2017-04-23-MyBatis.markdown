@@ -104,7 +104,7 @@ imgpath: /assets/images/mybatis/learn-day1/
 	}
 	```
 
-	>发现这个类中只有一个简单的selectPojo方法，没有实现，其实SqlSession是通过mybatis-config.xml配置文件中的```<mapper>```来获取这个映射器的，通过PojoMapper.class这个类信息定位到了```<mapper resource="com/learn/day1/mapper/pojoMapper.xml"/>```这个映射器，文件内容如下：
+	>这个接口中只有一个简单的selectPojo方法，SqlSession是通过mybatis-config.xml配置文件中的```<mapper>```来获取这个映射器的，通过PojoMapper.class这个类信息定位到了```<mapper resource="com/learn/day1/mapper/pojoMapper.xml"/>```这个映射器，文件内容如下：
 
 - pojoMapper.xml
 	```xml
@@ -127,7 +127,7 @@ imgpath: /assets/images/mybatis/learn-day1/
 
 ###### 3. 流程分析
 
-- &emsp;&emsp;可以看到，一个最简单的查询流程包括了一下步骤：<br>
+- &emsp;可以看到，一个最简单的查询流程包括了一下步骤：<br>
 >1. 通过mybatis的配置文件获取SqlSessionFactory。
 >
 >2. 通过SqlSessionFactory的openSession()方法打开一个SqlSession连接。
