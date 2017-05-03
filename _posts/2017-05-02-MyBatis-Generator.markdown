@@ -12,15 +12,15 @@ categories: MyBatis
 
 ### 环境配置
 
-- ** 开发环境： **
+- **开发环境：**
 	eclipse4.1
 	
-- ** 依赖： **
+- **依赖：**
 	- [mybatis-3.4.4.jar](https://github.com/mybatis/mybatis-3/releases)
 	- [mybatis-generator-core-1.3.5.jar](https://github.com/mybatis/generator/releases)
 	- [mysql-connector-java-5.1.41-bin.jar](https://www.mysql.com/products/connector/)
 	<br>
-- ** 使用Maven构建： **
+- **使用Maven构建：**
 	- 传统方式（Java代码）<br>
 ```xml
 		<dependency>
