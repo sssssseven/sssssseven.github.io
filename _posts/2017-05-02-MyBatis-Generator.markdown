@@ -3,27 +3,26 @@ layout: post
 title: MyBatis-Generator-Start
 data: 2017/5/2  
 categories: MyBatis
-
 ---
 
 &emsp;**Mybatis Generator（MBG）是一个Mybaits的代码生成器，可以自动生成Mybatis所需的各种文件，包括匹配表结构的Java POJO、MyBatis/iBATIS 兼容 SQL 映射 XML 文件、对应的Mapper接口等。**
 
 
-##开始使用MybatisGenerator
+##开始使用MybatisGenerator##
 
-1. ###环境配置
+ ###环境配置###
 
-	- **开发环境：**
+- **开发环境：**
 	eclipse4.1
 	
-	- **依赖：**
-		- [mybatis-3.4.4.jar](https://github.com/mybatis/mybatis-3/releases)
-		- [mybatis-generator-core-1.3.5.jar](https://github.com/mybatis/generator/releases)
-		- [mysql-connector-java-5.1.41-bin.jar](https://www.mysql.com/products/connector/)
+- **依赖：**
+	- [mybatis-3.4.4.jar](https://github.com/mybatis/mybatis-3/releases)
+	- [mybatis-generator-core-1.3.5.jar](https://github.com/mybatis/generator/releases)
+	- [mysql-connector-java-5.1.41-bin.jar](https://www.mysql.com/products/connector/)
 	<br>
-	- **使用Maven构建：**
-		- 传统方式（Java代码）<br>
-	```xml
+- **使用Maven构建：**
+	- 传统方式（Java代码）<br>
+```xml
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -39,9 +38,9 @@ categories: MyBatis
 			<artifactId>mybatis-generator-maven-plugin</artifactId>
 			<version>1.3.0</version>
 		<dependency>
-	```
-		- Maven插件方式<br>
-	```xml
+```
+	- Maven插件方式<br>
+```xml
 		<dependencies>
 			<dependency>
 				<groupId>mysql</groupId>
@@ -76,10 +75,10 @@ categories: MyBatis
 				</plugins>
 			</pluginManagement>
 		</build>
-	```
+```
 
-2.  ###MyBatis Generator 配置文件
-	generatorConfig.xml
+ ###MyBatis Generator 配置文件###
+generatorConfig.xml
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE generatorConfiguration
@@ -128,10 +127,9 @@ categories: MyBatis
 </generatorConfiguration>
 ```
 更多配置信息：[MBG XML配置参考](http://mbg.cndocs.tk/configreference/xmlconfig.html "MBG XML配置参考")
-3. ###自动生成
+###自动生成###
 	- **Java代码方式**
-	
-	```java
+```java
 	import java.io.InputStream;
 	import java.util.ArrayList;
 	import java.util.List;
@@ -160,18 +158,22 @@ categories: MyBatis
 			}
 		}
 	}
-	```
-	运行此类，即可自动生成Mybatis所需的POJO、DAO、Mapper配置文件，**刷新**项目。
+```
+运行此类，即可自动生成Mybatis所需的POJO、DAO、Mapper配置文件，**刷新**项目。
+
 	- **Maven插件生成**
+	
 	右键项目->Run As->Maven Build...->打开下图界面
+
 	![构建界面](http://sssssseven.github.io/assets/images/mybatis/learn-day1/generator-maven.png)
+	
 	配置，运行，成功之后刷新项目。
 	注意，这里需要你的项目为Maven项目才可以。
 <br>
 
-4. ###配置mybatis-config.xml
-	Mybatis Generator并没有为我们自动生成Mybatis的配置文件[mybatis-config.xml](https://github.com/sssssseven/MyBatis-learn/blob/master/MyBaits-Start/mybatis-config.xml)，需要我们根据生成的各种文件手动配置。
+###配置mybatis-config.xml###
+Mybatis Generator并没有为我们自动生成Mybatis的配置文件[mybatis-config.xml](https://github.com/sssssseven/MyBatis-learn/blob/master/MyBaits-Start/mybatis-config.xml)，需要我们根据生成的各种文件手动配置。
 
-###项目源码
+###项目源码###
 - [Java代码方式生成](https://github.com/sssssseven/MyBatis-learn/tree/master/Mybatis-generator-start/ByJava)
 - [Maven插件方式生成](https://github.com/sssssseven/MyBatis-learn/tree/master/Mybatis-generator-start/ByMaven)
